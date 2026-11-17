@@ -1,3 +1,5 @@
+# Optiver Realized Volatility Prediction
+
 # Setup
 163 US tickers, Yahoo Finance OHLCV only. Two samplings: 5-min bars (50 days, 78 bars/day, 8,146 rows) and 60-min bars (730 days, 7 bars/day, 116,975 rows). RV = sqrt of summed squared log returns, first return from open (overnight gap excluded). Features include three range estimators, intraday shape, volume/VWAP, overnight gap, 5/22-day log-RV averages, and market-comparison features.
 
@@ -12,3 +14,13 @@ Persistence baseline, HAR ridge, LightGBM on 29 features. Rolling-origin five-fo
 
 # Limits
  One regime, noisy RV from 7 returns, no order book, one horizon, large caps only, cumulative grouping.
+
+## Running it
+
+pip install -r requirements.txt
+python src/download.py --interval 5m --range 60d --out bars_5m.csv.gz
+python src/download.py --interval 60m --range 730d --out bars_1h.csv.gz
+python src/build_features.py --bars bars_5m.csv.gz --min-bars 40 --out dataset_5m.csv.gz
+python src/build_features.py --bars bars_1h.csv.gz --min-bars 4 --out dataset_1h.csv.gz
+python src/train.py --dataset dataset_5m.csv.gz
+python src/train.py --dataset dataset_1h.csv.gz --ablation
