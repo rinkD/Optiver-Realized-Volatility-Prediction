@@ -38,14 +38,17 @@ pip install -r requirements.txt
 
 # Download data
 python src/download.py --interval 5m --range 60d --out bars_5m.csv.gz
+
 python src/download.py --interval 60m --range 730d --out bars_1h.csv.gz
 
 # Build features
 python src/build_features.py --bars bars_5m.csv.gz --min-bars 40 --out dataset_5m.csv.gz
+
 python src/build_features.py --bars bars_1h.csv.gz --min-bars 4 --out dataset_1h.csv.gz
 
 # Train
 python src/train.py --dataset dataset_5m.csv.gz
+
 python src/train.py --dataset dataset_1h.csv.gz --ablation
 
 # Notes
