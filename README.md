@@ -25,3 +25,28 @@ The work is related to topics in high-frequency financial econometrics and volat
 HAR captures most of the improvement. Additional features help only marginally, and market-wide features slightly hurt performance. Sampling frequency has a larger impact than model choice.
 
 ## Repository Structure
+src/
+
+├── download.py          # Download OHLCV data from Yahoo Finance
+
+├── build_features.py    # Compute RV and features
+
+└── train.py             # Train and evaluate models
+
+## How to Run
+pip install -r requirements.txt
+
+# Download data
+python src/download.py --interval 5m --range 60d --out bars_5m.csv.gz
+python src/download.py --interval 60m --range 730d --out bars_1h.csv.gz
+
+# Build features
+python src/build_features.py --bars bars_5m.csv.gz --min-bars 40 --out dataset_5m.csv.gz
+python src/build_features.py --bars bars_1h.csv.gz --min-bars 4 --out dataset_1h.csv.gz
+
+# Train
+python src/train.py --dataset dataset_5m.csv.gz
+python src/train.py --dataset dataset_1h.csv.gz --ablation
+
+# Notes
+This is a learning project. The main goal was to implement the realized volatility pipeline cleanly and understand which simple features carry signal.
